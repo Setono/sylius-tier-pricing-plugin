@@ -28,4 +28,7 @@
         <function name="var_dump"/>
         <function name="print_r"/>
     </forbiddenFunctions>
+    <issueHandlers>
+        <UnnecessaryVarAnnotation errorLevel="suppress"/> <!-- We use these var annotations to help PhpStorm -->
+    </issueHandlers>
 </psalm>
