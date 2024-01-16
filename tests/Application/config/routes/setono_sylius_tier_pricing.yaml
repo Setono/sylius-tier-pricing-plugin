@@ -1,0 +1,2 @@
+setono_sylius_tier_pricing:
+    resource: "@SetonoSyliusTierPricingPlugin/Resources/config/routes.yaml"
