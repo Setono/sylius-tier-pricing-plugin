@@ -4,7 +4,7 @@
     <services>
         <service id="setono_sylius_tier_pricing.order_processor.price_tiers"
                  class="Setono\SyliusTierPricingPlugin\OrderProcessor\PriceTiersOrderProcessor">
-            <argument type="service" id="setono_sylius_tier_pricing.provider.price_tier.default"/>
+            <argument type="service" id="setono_sylius_tier_pricing.provider.price_tier"/>
             <argument type="service" id="sylius.factory.adjustment"/>
 
             <tag name="sylius.order_processor"/>

@@ -12,4 +12,6 @@ interface PriceTiersAwareInterface
      * @return Collection<array-key, PriceTierInterface>
      */
     public function getPriceTiers(): Collection;
+
+    public function addPriceTier(PriceTierInterface $priceTier): void;
 }

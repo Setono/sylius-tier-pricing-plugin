@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Provider;
 
 use Setono\SyliusTierPricingPlugin\Model\PriceTierInterface;
-use Sylius\Component\Core\Model\ChannelInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Product\Model\ProductVariantInterface;
 
 interface PriceTierProviderInterface
 {
@@ -22,10 +22,10 @@ interface PriceTierProviderInterface
     /**
      * Returns all available price tiers for the given product variant and channel
      *
-     * @return iterable<PriceTierInterface>
+     * @return list<PriceTierInterface>
      */
     public function getPriceTiers(
         ProductVariantInterface $productVariant,
         ChannelInterface $channel = null,
-    ): iterable;
+    ): array;
 }

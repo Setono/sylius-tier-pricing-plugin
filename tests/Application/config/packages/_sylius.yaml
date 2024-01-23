@@ -14,8 +14,8 @@ sylius_shop:
 sylius_api:
     enabled: true
 
-sylius_core:
+sylius_product:
     resources:
-        channel_pricing:
+        product:
             classes:
-                model: Tests\Setono\SyliusTierPricingPlugin\Application\Model\ChannelPricing
+                model: Tests\Setono\SyliusTierPricingPlugin\Application\Model\Product

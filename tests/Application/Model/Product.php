@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Setono\SyliusTierPricingPlugin\Application\Model;
@@ -6,13 +7,14 @@ namespace Tests\Setono\SyliusTierPricingPlugin\Application\Model;
 use Doctrine\ORM\Mapping as ORM;
 use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareInterface;
 use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareTrait;
-use Sylius\Component\Core\Model\ChannelPricing as BaseChannelPricing;
+use Sylius\Component\Core\Model\Product as BaseProduct;
 
 /**
- * @ORM\Table(name="sylius_channel_pricing")
+ * @ORM\Table(name="sylius_product")
+ *
  * @ORM\Entity()
  */
-class ChannelPricing extends BaseChannelPricing implements PriceTiersAwareInterface
+class Product extends BaseProduct implements PriceTiersAwareInterface
 {
     use PriceTiersAwareTrait {
         PriceTiersAwareTrait::__construct as private __priceTiersAwareTraitConstruct;
