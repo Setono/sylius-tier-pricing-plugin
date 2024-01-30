@@ -9,6 +9,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "brick/math": "^0.11.0",
         "doctrine/collections": "^1.6",
         "sylius/channel": "^1.0",
         "sylius/core": "^1.0",
@@ -18,7 +19,6 @@
         "sylius/resource-bundle": "^1.6",
         "symfony/config": "^5.4 || ^6.4",
         "symfony/dependency-injection": "^5.4 || ^6.4",
-        "symfony/http-kernel": "^5.4 || ^6.4",
         "symfony/string": "^5.4 || ^6.4",
         "webmozart/assert": "^1.11"
     },

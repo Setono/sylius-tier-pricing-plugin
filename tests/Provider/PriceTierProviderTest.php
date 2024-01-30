@@ -124,8 +124,10 @@ final class ProductWithPriceTiers extends Product implements PriceTiersAwareInte
     {
         parent::__construct();
 
-        // added to avoid PropertyNotSetInConstructor psalm error
+        /** @psalm-suppress PossiblyNullPropertyAssignmentValue */
         $this->code = null;
+
+        /** @psalm-suppress PossiblyNullPropertyAssignmentValue */
         $this->mainTaxon = null;
 
         $this->initializePriceTiersCollection();

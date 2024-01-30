@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\SyliusTierPricingPlugin\OrderProcessor;
 
+use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 use Setono\SyliusTierPricingPlugin\Provider\PriceTierProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
@@ -40,7 +42,12 @@ final class PriceTiersOrderProcessor implements OrderProcessorInterface
                 continue;
             }
 
-            $discount = (int) ceil($item->getFullDiscountedUnitPrice() / 100 * $priceTier->getDiscount());
+            // todo test this with many decimals on the discount
+            $discount = BigDecimal::of($item->getFullDiscountedUnitPrice())
+                ->multipliedBy(BigDecimal::of($priceTier->getDiscount()))
+                ->dividedBy(100, 0, RoundingMode::CEILING)
+                ->toInt()
+            ;
 
             $adjustment = $this->adjustmentFactory->createWithData(
                 self::PRICE_TIER_ADJUSTMENT,

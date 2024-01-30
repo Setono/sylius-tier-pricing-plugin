@@ -6,10 +6,15 @@ namespace Setono\SyliusTierPricingPlugin\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 trait PriceTiersAwareTrait
 {
-    /** @var Collection<array-key, PriceTierInterface> */
+    /**
+     * @var Collection<array-key, PriceTierInterface>
+     *
+     * @ORM\OneToMany(targetEntity="Setono\SyliusTierPricingPlugin\Model\PriceTierInterface", cascade={"all"}, mappedBy="product", orphanRemoval=true)
+     */
     protected Collection $priceTiers;
 
     public function __construct()
