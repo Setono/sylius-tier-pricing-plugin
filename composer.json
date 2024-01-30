@@ -53,7 +53,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Setono\\SyliusTierPricingPlugin\\": "tests/"
+            "Setono\\SyliusTierPricingPlugin\\Tests\\": "tests/"
         },
         "classmap": [
             "tests/Application/Kernel.php"

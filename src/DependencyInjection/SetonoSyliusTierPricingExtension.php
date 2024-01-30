@@ -15,8 +15,6 @@ final class SetonoSyliusTierPricingExtension extends Extension
     {
         /**
          * @psalm-suppress PossiblyNullArgument
-         *
-         * @var array{option: scalar} $config
          */
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

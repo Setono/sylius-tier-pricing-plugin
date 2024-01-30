@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusTierPricingPlugin\DependencyInjection;
+namespace Setono\SyliusTierPricingPlugin\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Setono\SyliusTierPricingPlugin\DependencyInjection\SetonoSyliusTierPricingExtension;

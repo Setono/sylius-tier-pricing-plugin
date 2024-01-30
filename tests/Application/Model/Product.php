@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Setono\SyliusTierPricingPlugin\Application\Model;
+namespace Setono\SyliusTierPricingPlugin\Tests\Application\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareInterface;
