@@ -21,8 +21,6 @@ final class SetonoSyliusTierPricingExtension extends Extension
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        $container->setParameter('setono_sylius_tier_pricing.option', $config['option']);
-
         $loader->load('services.xml');
     }
 }
