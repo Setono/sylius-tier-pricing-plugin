@@ -9,9 +9,7 @@ use Doctrine\Common\Collections\Collection;
 
 trait PriceTiersAwareTrait
 {
-    /**
-     * @var Collection<array-key, PriceTierInterface>
-     */
+    /** @var Collection<array-key, PriceTierInterface> */
     protected Collection $priceTiers;
 
     public function __construct()
@@ -25,5 +23,12 @@ trait PriceTiersAwareTrait
     public function getPriceTiers(): Collection
     {
         return $this->priceTiers;
+    }
+
+    public function addPriceTier(PriceTierInterface $priceTier): void
+    {
+        if (!$this->priceTiers->contains($priceTier)) {
+            $this->priceTiers->add($priceTier);
+        }
     }
 }

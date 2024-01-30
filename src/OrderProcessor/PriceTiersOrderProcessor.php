@@ -22,7 +22,7 @@ final class PriceTiersOrderProcessor implements OrderProcessorInterface
 
     public function process(BaseOrderInterface $order): void
     {
-        if (!$order instanceof OrderInterface || !$order->canBeProcessed()) {
+        if (!$order instanceof OrderInterface) {
             return;
         }
 
