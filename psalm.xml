@@ -6,7 +6,7 @@
     phpVersion="8.1"
     errorLevel="1"
     findUnusedBaselineEntry="true"
-    findUnusedPsalmSuppress="true"
+    findUnusedPsalmSuppress="false"
     findUnusedCode="false"
     findUnusedVariablesAndParams="true"
 >

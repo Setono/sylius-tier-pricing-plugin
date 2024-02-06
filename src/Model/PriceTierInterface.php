@@ -20,9 +20,9 @@ interface PriceTierInterface extends ResourceInterface, ChannelAwareInterface
 
     public function setQuantity(int $quantity): void;
 
-    public function getDiscount(): float;
+    public function getDiscount(): string;
 
-    public function setDiscount(float $discount): void;
+    public function setDiscount(float|string $discount): void;
 
     public function getProduct(): ?ProductInterface;
 

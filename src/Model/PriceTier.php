@@ -14,7 +14,7 @@ class PriceTier implements PriceTierInterface
 
     protected int $quantity = 1;
 
-    protected float $discount = 0.0;
+    protected string $discount = '0.0';
 
     protected ?ProductInterface $product = null;
 
@@ -37,14 +37,14 @@ class PriceTier implements PriceTierInterface
         $this->quantity = $quantity;
     }
 
-    public function getDiscount(): float
+    public function getDiscount(): string
     {
         return $this->discount;
     }
 
-    public function setDiscount(float $discount): void
+    public function setDiscount(float|string $discount): void
     {
-        $this->discount = $discount;
+        $this->discount = (string) $discount;
     }
 
     public function getProduct(): ?ProductInterface
