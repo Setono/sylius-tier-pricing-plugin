@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+    <class name="Setono\SyliusTierPricingPlugin\Model\PriceTier">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="ignoreNull">false</option>
+            <option name="fields">
+                <value>quantity</value>
+                <value>product</value>
+                <value>productVariant</value>
+                <value>channel</value>
+            </option>
+            <option name="message">setono_sylius_tier_pricing.price_tier.unique</option>
+            <option name="groups">
+                <value>sylius</value>
+                <value>setono_sylius_tier_pricing</value>
+            </option>
+        </constraint>
+
+        <property name="quantity">
+            <constraint name="NotBlank">
+                <option name="groups">
+                    <value>sylius</value>
+                    <value>setono_sylius_tier_pricing</value>
+                </option>
+            </constraint>
+            <constraint name="GreaterThan">
+                <option name="groups">
+                    <value>sylius</value>
+                    <value>setono_sylius_tier_pricing</value>
+                </option>
+                <option name="value">0</option>
+            </constraint>
+        </property>
+    </class>
+</constraint-mapping>

@@ -1,0 +1,3 @@
+setono_sylius_tier_pricing:
+    price_tier:
+        unique: Only one price tier can be set for a { quantity, product, product variant, channel } combination.
