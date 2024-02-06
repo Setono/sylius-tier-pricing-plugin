@@ -1,0 +1,9 @@
+<div class="ui tab" data-tab="price_tiers">
+    <h3 class="ui top attached header">{{ 'setono_sylius_tier_pricing.ui.price_tiers'|trans }}</h3>
+
+    <div class="ui attached segment">
+        {{ form_row(form.priceTiers) }}
+
+        {{ sylius_template_event(['sylius.admin.product.' ~ action ~ '.tab_price_tiers', 'sylius.admin.product.tab_price_tiers'], {'form': form}) }}
+    </div>
+</div>

@@ -1,0 +1,9 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Discount
+            discount_help: 'Discount in percent (e.g. 10 for 10%)'
+            quantity: Quantity
+    ui:
+        price_tiers: Price tiers
+        price_tier_adjustment_label: Discount when buying %quantity% pieces or more
