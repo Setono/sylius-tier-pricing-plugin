@@ -7,8 +7,8 @@ namespace Setono\SyliusTierPricingPlugin\Tests\Provider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusTierPricingPlugin\Model\PriceTier;
-use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareInterface;
-use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareTrait;
+use Setono\SyliusTierPricingPlugin\Model\ProductInterface;
+use Setono\SyliusTierPricingPlugin\Model\ProductTrait;
 use Setono\SyliusTierPricingPlugin\Provider\PriceTierProvider;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\Channel;
@@ -114,9 +114,9 @@ final class PriceTierProviderTest extends TestCase
     }
 }
 
-final class ProductWithPriceTiers extends Product implements PriceTiersAwareInterface
+final class ProductWithPriceTiers extends Product implements ProductInterface
 {
-    use PriceTiersAwareTrait {
+    use ProductTrait {
         __construct as private initializePriceTiersCollection;
     }
 

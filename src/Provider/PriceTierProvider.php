@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Provider;
 
 use Setono\SyliusTierPricingPlugin\Model\PriceTierInterface;
-use Setono\SyliusTierPricingPlugin\Model\PriceTiersAwareInterface;
+use Setono\SyliusTierPricingPlugin\Model\ProductInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
 use Webmozart\Assert\Assert;
 
@@ -46,10 +45,9 @@ final class PriceTierProvider implements PriceTierProviderInterface
     {
         $channel = $channel ?? $this->channelContext->getChannel();
 
-        /** @var PriceTiersAwareInterface|ProductInterface|null $product */
+        /** @var ProductInterface|null $product */
         $product = $productVariant->getProduct();
-        Assert::notNull($product);
-        Assert::isInstanceOf($product, PriceTiersAwareInterface::class);
+        Assert::isInstanceOf($product, ProductInterface::class);
 
         /** @var array<int, list<PriceTierInterface>> $quantities */
         $quantities = [];
