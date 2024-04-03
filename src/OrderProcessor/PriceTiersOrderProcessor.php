@@ -69,10 +69,13 @@ final class PriceTiersOrderProcessor implements OrderProcessorInterface
                     -1 * $unitDiscount,
                     false,
                     [
+                        'priceTierId' => $priceTier->getId(),
                         'priceTierQuantity' => $priceTier->getQuantity(),
                         'priceTierDiscount' => $priceTier->getDiscount(),
                     ],
                 );
+
+                $adjustment->setOriginCode('tier_pricing');
 
                 $unit->addAdjustment($adjustment);
 
