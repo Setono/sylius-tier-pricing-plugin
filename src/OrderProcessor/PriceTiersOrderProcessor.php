@@ -22,6 +22,7 @@ final class PriceTiersOrderProcessor implements OrderProcessorInterface
         private readonly AdjustmentFactoryInterface $adjustmentFactory,
         private readonly IntegerDistributorInterface $distributor,
         private readonly TranslatorInterface $translator,
+        private readonly ?string $adjustment_origin_code,
     ) {
     }
 
@@ -73,6 +74,10 @@ final class PriceTiersOrderProcessor implements OrderProcessorInterface
                         'priceTierDiscount' => $priceTier->getDiscount(),
                     ],
                 );
+
+                if ($this->adjustment_origin_code !== null) {
+                    $adjustment->setOriginCode($this->adjustment_origin_code);
+                }
 
                 $unit->addAdjustment($adjustment);
 

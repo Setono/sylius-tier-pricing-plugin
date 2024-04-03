@@ -8,6 +8,7 @@
             <argument type="service" id="sylius.factory.adjustment"/>
             <argument type="service" id="sylius.integer_distributor"/>
             <argument type="service" id="translator"/>
+            <argument type="string" id="setono_sylius_tier_pricing.adjustment_origin_code" />
 
             <tag name="sylius.order_processor" priority="15"/>
         </service>

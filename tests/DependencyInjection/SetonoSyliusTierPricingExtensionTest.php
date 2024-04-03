@@ -27,5 +27,6 @@ final class SetonoSyliusTierPricingExtensionTest extends AbstractExtensionTestCa
         $this->load();
 
         $this->assertContainerBuilderHasParameter('setono_sylius_tier_pricing.model.price_tier.class');
+        $this->assertContainerBuilderHasParameter('setono_sylius_tier_pricing.adjustment_origin_code');
     }
 }

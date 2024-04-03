@@ -30,6 +30,10 @@ final class Configuration implements ConfigurationInterface
         /** @psalm-suppress MixedMethodCall,PossiblyNullReference,UndefinedInterfaceMethod */
         $node
             ->children()
+                ->scalarNode('adjustment_origin_code')
+                    ->defaultNull()
+                    ->info('If defined, the discount adjustments will be created with the chosen origin_code')
+                ->end()
                 ->arrayNode('resources')
                     ->addDefaultsIfNotSet()
                     ->children()
