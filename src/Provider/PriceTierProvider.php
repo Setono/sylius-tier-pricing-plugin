@@ -64,6 +64,9 @@ final class PriceTierProvider implements PriceTierProviderInterface
             $quantities[$priceTier->getQuantity()][] = $priceTier;
         }
 
+        // Sort quantities in ascending order by key in case they were stored "out of order" in the DB
+        ksort($quantities, SORT_NUMERIC);
+
         $resolvedPriceTiers = [];
 
         foreach ($quantities as $priceTiers) {
