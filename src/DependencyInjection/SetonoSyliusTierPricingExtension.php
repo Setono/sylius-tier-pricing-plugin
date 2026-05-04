@@ -10,7 +10,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\Yaml\Yaml;
 
 final class SetonoSyliusTierPricingExtension extends AbstractResourceExtension implements PrependExtensionInterface
 {
@@ -36,9 +35,36 @@ final class SetonoSyliusTierPricingExtension extends AbstractResourceExtension i
             return;
         }
 
-        /** @var array{sylius_twig_hooks?: array<string, mixed>} $config */
-        $config = Yaml::parseFile(__DIR__ . '/../../config/sylius_twig_hooks.yaml');
+        $sideNavigationTemplate = '@SetonoSyliusTierPricingPlugin/admin/product/form/side_navigation/price_tiers.html.twig';
+        $sectionsTemplate = '@SetonoSyliusTierPricingPlugin/admin/product/form/sections/price_tiers.html.twig';
 
-        $container->prependExtensionConfig('sylius_twig_hooks', $config['sylius_twig_hooks'] ?? []);
+        $container->prependExtensionConfig('sylius_twig_hooks', [
+            'hooks' => [
+                'sylius_admin.product.update.content.form.side_navigation' => [
+                    'price_tiers' => [
+                        'template' => $sideNavigationTemplate,
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_admin.product.create.content.form.side_navigation' => [
+                    'price_tiers' => [
+                        'template' => $sideNavigationTemplate,
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_admin.product.update.content.form.sections' => [
+                    'price_tiers' => [
+                        'template' => $sectionsTemplate,
+                        'priority' => -100,
+                    ],
+                ],
+                'sylius_admin.product.create.content.form.sections' => [
+                    'price_tiers' => [
+                        'template' => $sectionsTemplate,
+                        'priority' => -100,
+                    ],
+                ],
+            ],
+        ]);
     }
 }
