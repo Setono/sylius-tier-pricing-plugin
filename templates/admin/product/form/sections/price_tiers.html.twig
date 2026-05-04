@@ -1,0 +1,43 @@
+{% set form = hookable_metadata.context.form %}
+{% set price_tiers = form.priceTiers %}
+
+<div class="tab-pane {% if hookable_metadata.configuration.active|default(false) %}show active{% endif %}" id="product-price-tiers" role="tabpanel" tabindex="0">
+    <div class="card mb-3">
+        <div class="card-header">
+            <h2 class="card-title">{{ 'setono_sylius_tier_pricing.ui.price_tiers'|trans }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row" {{ sylius_test_html_attribute('price-tier-subforms') }}>
+                {% for price_tier_form in price_tiers %}
+                    <div class="col-12 row mb-4 align-items-end" {{ sylius_test_html_attribute('price-tier-subform') }}>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    {{ form_row(price_tier_form.quantity) }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form_row(price_tier_form.discount) }}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form_row(price_tier_form.channel) }}
+                                </div>
+                                {% if price_tier_form.productVariant is defined %}
+                                    <div class="col-md-12 mb-3">
+                                        {{ form_row(price_tier_form.productVariant) }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-auto mb-3">
+                            {{ form_widget(price_tier_form.vars.button_delete, { label: 'sylius.ui.delete'|trans, attr: { class: 'btn btn-outline-danger', 'data-test-price-tier-delete': '' }}) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="d-grid gap-2">
+                {{ form_widget(price_tiers.vars.button_add, { label: 'setono_sylius_tier_pricing.ui.add_price_tier'|trans, attr: { class: 'btn btn-outline-primary', 'data-test-price-tier-add': '' }}) }}
+            </div>
+        </div>
+    </div>
+</div>

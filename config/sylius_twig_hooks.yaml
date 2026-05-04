@@ -1,0 +1,21 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.product.update.content.form.side_navigation':
+            price_tiers:
+                template: '@SetonoSyliusTierPricingPlugin/admin/product/form/side_navigation/price_tiers.html.twig'
+                priority: -100
+
+        'sylius_admin.product.create.content.form.side_navigation':
+            price_tiers:
+                template: '@SetonoSyliusTierPricingPlugin/admin/product/form/side_navigation/price_tiers.html.twig'
+                priority: -100
+
+        'sylius_admin.product.update.content.form.sections':
+            price_tiers:
+                template: '@SetonoSyliusTierPricingPlugin/admin/product/form/sections/price_tiers.html.twig'
+                priority: -100
+
+        'sylius_admin.product.create.content.form.sections':
+            price_tiers:
+                template: '@SetonoSyliusTierPricingPlugin/admin/product/form/sections/price_tiers.html.twig'
+                priority: -100

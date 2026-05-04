@@ -10,11 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait ProductTrait
 {
-    /**
-     * @var Collection<array-key, PriceTierInterface>
-     *
-     * @ORM\OneToMany(targetEntity="Setono\SyliusTierPricingPlugin\Model\PriceTierInterface", cascade={"all"}, mappedBy="product", orphanRemoval=true)
-     */
+    /** @var Collection<array-key, PriceTierInterface> */
+    #[ORM\OneToMany(targetEntity: PriceTierInterface::class, mappedBy: 'product', cascade: ['all'], orphanRemoval: true)]
     protected Collection $priceTiers;
 
     public function __construct()

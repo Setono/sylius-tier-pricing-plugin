@@ -6,7 +6,7 @@
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 [![Mutation testing][ico-infection]][link-infection]
 
-Use price tiers in your Sylius store.
+Use price tiers in your Sylius store. Compatible with Sylius 2.x — see [UPGRADE.md](UPGRADE.md) when upgrading from 1.x.
 
 [ico-version]: https://poser.pugx.org/setono/sylius-tier-pricing-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-tier-pricing-plugin/license

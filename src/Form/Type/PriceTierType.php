@@ -21,12 +21,14 @@ final class PriceTierType extends AbstractResourceType
     {
         $builder->add('quantity', IntegerType::class, [
             'label' => 'setono_sylius_tier_pricing.form.price_tier.quantity',
+            'empty_data' => '1',
         ])->add('discount', NumberType::class, [
             'label' => 'setono_sylius_tier_pricing.form.price_tier.discount',
             'html5' => true,
             'input' => 'string',
-            'scale' => 7, // defined in src/Resources/config/doctrine/model/PriceTier.orm.xml
+            'scale' => 7, // defined in config/doctrine/model/PriceTier.orm.xml
             'help' => 'setono_sylius_tier_pricing.form.price_tier.discount_help',
+            'empty_data' => '0.0',
         ])->add('channel', ChannelChoiceType::class, [
             'label' => 'sylius.ui.channel',
             'required' => false,

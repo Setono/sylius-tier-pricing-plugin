@@ -11,16 +11,16 @@ use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
 use Webmozart\Assert\Assert;
 
-final class PriceTierProvider implements PriceTierProviderInterface
+final readonly class PriceTierProvider implements PriceTierProviderInterface
 {
-    public function __construct(private readonly ChannelContextInterface $channelContext)
+    public function __construct(private ChannelContextInterface $channelContext)
     {
     }
 
     public function getPriceTier(
         int $quantity,
         ProductVariantInterface $productVariant,
-        ChannelInterface $channel = null,
+        ?ChannelInterface $channel = null,
     ): ?PriceTierInterface {
         $resolvedPriceTier = null;
 
@@ -41,9 +41,9 @@ final class PriceTierProvider implements PriceTierProviderInterface
         return $resolvedPriceTier;
     }
 
-    public function getPriceTiers(ProductVariantInterface $productVariant, ChannelInterface $channel = null): array
+    public function getPriceTiers(ProductVariantInterface $productVariant, ?ChannelInterface $channel = null): array
     {
-        $channel = $channel ?? $this->channelContext->getChannel();
+        $channel ??= $this->channelContext->getChannel();
 
         /** @var ProductInterface|null $product */
         $product = $productVariant->getProduct();
@@ -53,11 +53,11 @@ final class PriceTierProvider implements PriceTierProviderInterface
         $quantities = [];
 
         foreach ($product->getPriceTiers() as $priceTier) {
-            if ($priceTier->getChannel() !== null && $priceTier->getChannel()?->getCode() !== $channel->getCode()) {
+            if ($priceTier->getChannel() !== null && $priceTier->getChannel()->getCode() !== $channel->getCode()) {
                 continue;
             }
 
-            if ($priceTier->getProductVariant() !== null && $priceTier->getProductVariant()?->getCode() !== $productVariant->getCode()) {
+            if ($priceTier->getProductVariant() !== null && $priceTier->getProductVariant()->getCode() !== $productVariant->getCode()) {
                 continue;
             }
 
