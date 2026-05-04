@@ -93,7 +93,7 @@ final class PriceTierProviderTest extends TestCase
         self::assertSame($expected20, $priceTier);
     }
 
-    private static function getPriceTier(int $quantity, string $channelCode = null, string $productVariantCode = null): PriceTier
+    private static function getPriceTier(int $quantity, ?string $channelCode = null, ?string $productVariantCode = null): PriceTier
     {
         $priceTier = new PriceTier();
         $priceTier->setQuantity($quantity);
