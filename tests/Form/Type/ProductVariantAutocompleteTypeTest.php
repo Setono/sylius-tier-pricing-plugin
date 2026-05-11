@@ -94,7 +94,15 @@ final class ProductVariantAutocompleteTypeTest extends TestCase
             ->willReturn($qbReveal)
         ;
 
-        $repository = $this->prophesize(EntityRepository::class)->reveal();
+        // Prophecy's class mirror chokes on intersection types reached through Doctrine's lowest
+        // EntityRepository ancestors, so we hand-roll a no-op subclass. The closure never reads the
+        // repository argument — it just needs an instance of the right type to satisfy the call.
+        $repository = new class() extends EntityRepository {
+            /** @phpstan-ignore constructor.missingParentCall (intentional — see comment above) */
+            public function __construct()
+            {
+            }
+        };
 
         $filterQuery($qbReveal, 'any-search-query', $repository);
     }
