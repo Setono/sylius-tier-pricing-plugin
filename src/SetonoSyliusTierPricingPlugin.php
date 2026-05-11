@@ -8,6 +8,13 @@ use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 
+/**
+ * Pure AbstractResourceBundle wiring — getPath()/getConfigFilesPath()/getSupportedDrivers() are exercised
+ * implicitly every time the container boots, but they're not meaningful units to assert on in isolation.
+ * Skip them in coverage so the report stays focused on logic that benefits from per-line scrutiny.
+ *
+ * @codeCoverageIgnore
+ */
 final class SetonoSyliusTierPricingPlugin extends AbstractResourceBundle
 {
     use SyliusPluginTrait;
