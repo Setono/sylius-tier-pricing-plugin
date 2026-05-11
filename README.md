@@ -83,9 +83,9 @@ When an order is processed, the `PriceTiersOrderProcessor` (priority 15, runs *b
 [ico-license]: https://poser.pugx.org/setono/sylius-tier-pricing-plugin/license
 [ico-github-actions]: https://github.com/Setono/sylius-tier-pricing-plugin/workflows/build/badge.svg
 [ico-code-coverage]: https://codecov.io/gh/Setono/sylius-tier-pricing-plugin/graph/badge.svg
-[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2FSyliusPluginSkeleton%2Fmaster
+[ico-infection]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FSetono%2Fsylius-tier-pricing-plugin%2F2.x
 
 [link-packagist]: https://packagist.org/packages/setono/sylius-tier-pricing-plugin
 [link-github-actions]: https://github.com/Setono/sylius-tier-pricing-plugin/actions
 [link-code-coverage]: https://codecov.io/gh/Setono/sylius-tier-pricing-plugin
-[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/sylius-tier-pricing-plugin/master
+[link-infection]: https://dashboard.stryker-mutator.io/reports/github.com/Setono/sylius-tier-pricing-plugin/2.x
