@@ -43,6 +43,10 @@ The collection type now extends `Symfony\UX\LiveComponent\Form\Type\LiveCollecti
 - `Setono\SyliusTierPricingPlugin\EventSubscriber\ProductFormMenuSubscriber` — the menu-builder pattern doesn't exist in v2.
 - `sylius.integer_distributor` service-id reference — internal; only matters if you wired the plugin's order processor manually. Use `sylius.distributor.integer` instead.
 
-### Public-API signature change
+### Public-API signature changes
 
-`PriceTierProviderInterface::getPriceTier()` and `getPriceTiers()` changed `ChannelInterface $channel = null` → `?ChannelInterface $channel = null` (PHP 8.4 deprecates implicit nullables). If you implemented the interface yourself, update your signatures to match. Behaviour is identical.
+- `PriceTierProviderInterface::getPriceTier()` and `getPriceTiers()` changed `ChannelInterface $channel = null` → `?ChannelInterface $channel = null` (PHP 8.4 deprecates implicit nullables). Behaviour is identical.
+- `PriceTierInterface::setQuantity()` changed `int $quantity` → `?int $quantity`. Passing null is a no-op (leaves the existing value untouched).
+- `PriceTierInterface::setDiscount()` changed `float|string $discount` → `float|string|null $discount`. Same no-op-on-null semantics.
+
+The setter changes let `PriceTier` survive `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType`'s empty-bind cycle, which posts `null` for every required field on a freshly-added row before the user types anything. If you implemented `PriceTierInterface` yourself, widen your signatures to match.

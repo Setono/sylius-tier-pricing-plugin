@@ -19,17 +19,14 @@ final class PriceTierType extends AbstractResourceType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // `empty_data` defaults below: LiveCollectionType re-binds on `addCollectionItem` before the user types, and `PriceTier`'s setters are non-nullable.
         $builder->add('quantity', IntegerType::class, [
             'label' => 'setono_sylius_tier_pricing.form.price_tier.quantity',
-            'empty_data' => '1',
         ])->add('discount', NumberType::class, [
             'label' => 'setono_sylius_tier_pricing.form.price_tier.discount',
             'html5' => true,
             'input' => 'string',
             'scale' => 7, // defined in config/doctrine/model/PriceTier.orm.xml
             'help' => 'setono_sylius_tier_pricing.form.price_tier.discount_help',
-            'empty_data' => '0.0',
         ])->add('channel', ChannelChoiceType::class, [
             'label' => 'sylius.ui.channel',
             'required' => false,

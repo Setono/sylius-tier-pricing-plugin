@@ -32,8 +32,12 @@ class PriceTier implements PriceTierInterface
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): void
+    public function setQuantity(?int $quantity): void
     {
+        if (null === $quantity) {
+            return;
+        }
+
         $this->quantity = $quantity;
     }
 
@@ -42,8 +46,12 @@ class PriceTier implements PriceTierInterface
         return $this->discount;
     }
 
-    public function setDiscount(float|string $discount): void
+    public function setDiscount(float|string|null $discount): void
     {
+        if (null === $discount) {
+            return;
+        }
+
         $this->discount = (string) $discount;
     }
 
