@@ -6,6 +6,7 @@ namespace Setono\SyliusTierPricingPlugin\Tests\Provider;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusTierPricingPlugin\Model\PriceTier;
 use Setono\SyliusTierPricingPlugin\Provider\PriceTierProvider;
 use Setono\SyliusTierPricingPlugin\Tests\Model\Fixture\ProductTraitFixture;
@@ -16,6 +17,8 @@ use Sylius\Component\Core\Model\ProductVariant;
 
 final class PriceTierProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     private const CHANNEL_CODE = 'WEB';
 
     private const OTHER_CHANNEL_CODE = 'WEB2';
@@ -229,12 +232,12 @@ final class PriceTierProviderTest extends TestCase
 
     private function provider(?ChannelInterface $contextChannel = null): PriceTierProvider
     {
-        $channelContext = $this->createMock(ChannelContextInterface::class);
+        $channelContext = $this->prophesize(ChannelContextInterface::class);
         if (null !== $contextChannel) {
-            $channelContext->method('getChannel')->willReturn($contextChannel);
+            $channelContext->getChannel()->willReturn($contextChannel);
         }
 
-        return new PriceTierProvider($channelContext);
+        return new PriceTierProvider($channelContext->reveal());
     }
 
     private function priceTier(int $quantity, ?string $channelCode = null, ?string $productVariantCode = null): PriceTier

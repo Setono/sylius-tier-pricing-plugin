@@ -17,11 +17,26 @@ Composer scripts (also available as zsh aliases from `~/CLAUDE.md`: `cf`/`ca`/`c
 - `vendor/bin/infection` — mutation testing (`infection.json.dist`).
 - `vendor/bin/composer-dependency-analyser` — dependency hygiene check (`composer-dependency-analyser.php`).
 
-Test-app console (must `cd tests/Application` first — it's its own Symfony app with its own `composer.json` and `Kernel.php`):
+Test-app console — prefer running from the project root via `./tests/Application/bin/console <cmd>` (rather than `cd`ing into `tests/Application` first). The test app is its own Symfony app (own `composer.json`, own `Kernel.php`), but its CLI works fine from the repo root.
 
-- `bin/console lint:container` / `bin/console lint:yaml ../../config` / `bin/console lint:twig ../../templates`
-- `bin/console doctrine:database:create --if-not-exists` then `bin/console doctrine:schema:create` to spin up the integration DB. CI uses MySQL/MariaDB at the URL declared in `tests/Application/.env`.
-- For a full local browser-driven smoke test: also run `yarn install && yarn build` (Webpack Encore builds `public/build/{admin,shop}/`), `bin/console assets:install public --symfonkylink`, `bin/console lexik:jwt:generate-keypair --skip-if-exists`, `bin/console sylius:fixtures:load default --no-interaction`, then `symfony serve -d` from `tests/Application/`.
+- `./tests/Application/bin/console lint:container` / `lint:yaml config` / `lint:twig templates`
+- `./tests/Application/bin/console doctrine:database:create --if-not-exists` then `doctrine:schema:create` to spin up the integration DB. **Functional tests require MySQL/MariaDB** at the URL declared in `tests/Application/.env`; SQLite won't work — the schema uses MySQL-specific column types and collations.
+
+Booting the test app locally (full UI smoke test):
+
+```bash
+./tests/Application/bin/console doctrine:database:create --if-not-exists
+./tests/Application/bin/console doctrine:schema:create
+./tests/Application/bin/console sylius:fixtures:load default --no-interaction  # admin login: sylius / sylius
+./tests/Application/bin/console lexik:jwt:generate-keypair --skip-if-exists
+./tests/Application/bin/console assets:install tests/Application/public --symlink
+(cd tests/Application && yarn install && yarn build)                            # builds public/build/{admin,shop}/
+(cd tests/Application && symfony server:status) || (cd tests/Application && symfony server:start -d)  # https://127.0.0.1:8000/admin
+```
+
+Notes:
+- Always run `symfony server:status` first — `server:start` fails noisily if a server is already up. `server:status` is **per-project** (it inspects cwd), so `cd tests/Application` before checking.
+- When you build or change a feature with a UI surface (admin form, grid, page), verify it via the Playwright MCP after booting the test app — don't rely on PHPUnit/PHPStan/ECS alone. Twig hook misconfiguration only shows up in the rendered DOM.
 
 The repo root `./init` script is a one-shot rename tool inherited from the Setono plugin skeleton; do not run it on this repo. (It was deleted in the v1.x branch — re-check before touching.)
 
@@ -33,12 +48,12 @@ Three collaborating pieces drive tier pricing. Reading them together is the fast
 
 2. **`Provider\PriceTierProvider`** — given a quantity + variant + channel, returns the single best-matching tier. It groups all of the product's tiers by quantity, then for each quantity picks the most-specific tier using this precedence: `(channel + variant) > variant > channel > generic`. The result is sorted ascending by quantity (`ksort`, see `src/Provider/PriceTierProvider.php:67` — added because tiers can come out of the DB unordered), and `getPriceTier()` walks that list to find the highest quantity threshold the requested quantity meets. Channel defaults to `ChannelContextInterface` when not passed.
 
-3. **`OrderProcessor\PriceTiersOrderProcessor`** — tagged `sylius.order_processor` with **priority 15** (runs *before* tax/shipping; `config/services/order_processor.xml`). For each order item it asks the provider for a tier, computes `total * discount%` rounded with `RoundingMode::CEILING`, splits the integer discount across units via Sylius' `sylius.distributor.integer` (renamed in v2 from `sylius.integer_distributor`), and attaches one `ORDER_UNIT_PROMOTION_ADJUSTMENT` per unit with `originCode = 'tier_pricing'` and metadata (`priceTierId`, `priceTierQuantity`, `priceTierDiscount`). It deliberately does **not** clear prior adjustments — it relies on Sylius' own `ORDER_UNIT_PROMOTION_ADJUSTMENT` lifecycle to remove them.
+3. **`OrderProcessor\PriceTiersOrderProcessor`** — tagged `sylius.order_processor` with **priority 15** (runs *before* tax/shipping; `config/services/order_processor.php`). For each order item it asks the provider for a tier, computes `total * discount%` rounded with `RoundingMode::CEILING`, splits the integer discount across units via Sylius' `sylius.distributor.integer` (renamed in v2 from `sylius.integer_distributor`), and attaches one `ORDER_UNIT_PROMOTION_ADJUSTMENT` per unit with `originCode = 'tier_pricing'` and metadata (`priceTierId`, `priceTierQuantity`, `priceTierDiscount`). It deliberately does **not** clear prior adjustments — it relies on Sylius' own `ORDER_UNIT_PROMOTION_ADJUSTMENT` lifecycle to remove them.
 
 Wiring:
 
 - `SetonoSyliusTierPricingPlugin` extends `AbstractResourceBundle` + `SyliusPluginTrait`, ORM-only. It overrides **both** `getPath()` (returns `dirname(__DIR__)` so Sylius sees the repo root) **and** `getConfigFilesPath()` (returns `<root>/config/doctrine/<format>` — without this override, Sylius' `AbstractResourceBundle::getConfigFilesPath()` would still look under `Resources/config/doctrine/`).
-- DI services live in `config/services/*.xml`, imported from `config/services.xml`. The extension (`SetonoSyliusTierPricingExtension`) implements `PrependExtensionInterface`: its `prepend()` injects the plugin's `sylius_twig_hooks` configuration directly via `prependExtensionConfig()` so consumers don't need to import anything. **Convention:** other-bundle configuration belongs in `prepend()` and **must be inlined as a PHP array** — do not read/parse a YAML file from disk and forward it. Keeping the config in PHP means it lives next to the code that depends on it, type errors are caught at compile time, and the extension stays testable without filesystem fixtures.
+- DI services live in `config/services/*.php` (PHP DSL via `ContainerConfigurator`), imported from `config/services.php`, loaded by the extension via `PhpFileLoader`. **Do not** ship XML service config — the Setono Sylius-2 convention is PHP for IDE refactoring, PHPStan analysis at compile time, and FQCN service ids. Each leaf file starts with `namespace Symfony\Component\DependencyInjection\Loader\Configurator;` so `service()`, `param()`, etc. resolve as bare function calls. The extension implements `PrependExtensionInterface`: its `prepend()` injects the plugin's `sylius_twig_hooks` configuration directly via `prependExtensionConfig()` so consumers don't need to import anything. **Convention:** other-bundle configuration belongs in `prepend()` and **must be inlined as a PHP array** — do not read/parse a YAML file from disk and forward it.
 - `Form\Extension\ProductTypeExtension` adds the `priceTiers` field to the Sylius `ProductType`. `Form\Type\PriceTierCollectionType` extends `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType` (mirroring how Sylius admin handles product images) so add/delete fire server-side via Symfony UX Live Components — no client-side prototype-cloning JS. `Form\Type\PriceTierType` provides `empty_data` defaults on `quantity` (`'1'`) and `discount` (`'0.0'`); these are required because LiveCollectionType re-binds the form on `addCollectionItem` *before* the user types anything, and the model's `setQuantity(int)` is non-nullable.
 - The admin product tab is rendered by Twig hooks (`templates/admin/product/form/{side_navigation,sections}/price_tiers.html.twig`) registered against `sylius_admin.product.{update,create}.content.form.{side_navigation,sections}` — the canonical Sylius 2 hook points (declared by the core in `vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/Resources/config/app/twig_hooks/product/update.yaml`). `ProductFormMenuSubscriber` is gone in v2 — Sylius 2 has no `ProductMenuBuilderEvent`.
 
@@ -52,3 +67,7 @@ Wiring:
 - For form fields with non-nullable scalar setters that participate in a `LiveCollectionType`, always set `empty_data`.
 - Do **not** revert `getConfigFilesPath()` to default — Doctrine mapping discovery breaks immediately.
 - Configuration of other bundles lives in `SetonoSyliusTierPricingExtension::prepend()` as inlined PHP arrays passed to `prependExtensionConfig()`. Do not read YAML files from disk inside `prepend()` and forward the parsed result.
+- DI service configuration is **PHP DSL**, not XML. New services go under `config/services/<topic>.php` using `ContainerConfigurator`. Use the FQCN as the service id and alias `*Interface` to it for forward compatibility.
+- **Mocks: always use Prophecy** (`Prophecy\PhpUnit\ProphecyTrait` + `$this->prophesize(...)->reveal()`). Don't mix with PHPUnit's native `createMock()` / `createStub()` — keep doubles consistent across the suite. The `setono/sylius-plugin` toolchain ships `jangregor/phpstan-prophecy` so PHPStan understands `prophesize()` return types.
+- Before each commit, run `composer fix-style`, `composer analyse`, and `composer phpunit` and fix what they flag. Don't commit on top of pre-existing failures.
+- Prefer **relative paths** in shell commands (`./tests/Application/bin/console ...`, `composer ...`). Absolute paths inside the working directory trigger Claude Code permission prompts. If you `cd` into `tests/Application/`, `cd` back to the project root before subsequent commands rather than chaining absolute paths.

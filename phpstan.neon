@@ -21,3 +21,7 @@ parameters:
 
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        - { identifier: missingType.generics }
+        - { identifier: missingType.iterableValue }

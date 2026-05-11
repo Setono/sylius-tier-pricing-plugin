@@ -13,16 +13,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    /** @phpstan-ignore missingType.generics (TreeBuilder is generic in Symfony >=7.1 but not in 6.4) */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('setono_sylius_tier_pricing');
 
-        /**
-         * @var ArrayNodeDefinition $rootNode
-         *
-         * @phpstan-ignore varTag.generics (ArrayNodeDefinition is generic in Symfony >=7.1 but not in 6.4)
-         */
+        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
 
         $this->addResourcesSection($rootNode);
@@ -30,10 +25,8 @@ final class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /** @phpstan-ignore missingType.generics (ArrayNodeDefinition is generic in Symfony >=7.1 but not in 6.4) */
     private function addResourcesSection(ArrayNodeDefinition $node): void
     {
-        /** @psalm-suppress MixedMethodCall,PossiblyNullReference,UndefinedInterfaceMethod */
         $node
             ->children()
                 ->arrayNode('resources')
