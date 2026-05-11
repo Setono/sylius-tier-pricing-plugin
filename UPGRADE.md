@@ -64,7 +64,21 @@ The plugin's order processor previously injected `sylius.integer_distributor`; S
 ### Public-API signature changes
 
 - `PriceTierProviderInterface::getPriceTier()` and `getPriceTiers()` changed `ChannelInterface $channel = null` → `?ChannelInterface $channel = null` (PHP 8.4 deprecates implicit nullables). Behaviour is identical.
-- `PriceTierInterface::setQuantity()` changed `int $quantity` → `?int $quantity`. Passing null is a no-op (leaves the existing value untouched).
-- `PriceTierInterface::setDiscount()` changed `float|string $discount` → `float|string|null $discount`. Same no-op-on-null semantics.
+- `PriceTierInterface::setQuantity()` changed `int $quantity` → `?int $quantity`. Passing null resets `quantity` to `PriceTier::DEFAULT_QUANTITY` (`1`).
+- `PriceTierInterface::setDiscount()` changed `float|string $discount` → `float|string|null $discount`. Passing null resets `discount` to `PriceTier::DEFAULT_DISCOUNT` (`'0.0'`).
 
-The setter changes let `PriceTier` survive `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType`'s empty-bind cycle, which posts `null` for every required field on a freshly-added row before the user types anything. If you implemented `PriceTierInterface` yourself, widen your signatures to match.
+The setter changes let `PriceTier` survive `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType`'s empty-bind cycle, which posts `null` for every required field on a freshly-added row before the user types anything. Reset-to-default means the post-rebind state is deterministic regardless of any prior value. If you implemented `PriceTierInterface` yourself, widen your signatures to match.
+
+### Discount is now validated
+
+`PriceTier::$discount` gained `NotBlank` + `GreaterThan(0)` + `LessThanOrEqual(100)` constraints (validation groups `sylius` and `setono_sylius_tier_pricing`). A submission that leaves the discount field blank now surfaces "This value should be greater than 0." rather than silently persisting a useless 0% tier.
+
+**One-time data check:** any existing tier in your database with `discount = 0` will now fail validation on the next product save. Run a quick sweep to find and either delete them or set a real discount:
+
+```sql
+SELECT id, product_id, quantity FROM setono_sylius_tier_pricing__price_tier WHERE discount = 0;
+```
+
+### Variant field is now an autocomplete
+
+The per-row variant selector inside `PriceTierType` switched from `Sylius\Bundle\ProductBundle\Form\Type\ProductVariantChoiceType` (a plain select) to the plugin's own `Setono\SyliusTierPricingPlugin\Form\Type\ProductVariantAutocompleteType` (a Symfony UX autocomplete scoped to the parent product via `extra_options.product_id`). The field name (`productVariant`) and the stored value (a `ProductVariantInterface`) are unchanged. If you overrode the field's options in your own form-type extension, swap the type reference accordingly.
