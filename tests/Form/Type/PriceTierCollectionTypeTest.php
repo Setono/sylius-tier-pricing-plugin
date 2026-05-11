@@ -111,7 +111,7 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
     #[Test]
     public function the_add_button_view_carries_the_live_collection_button_add_block_prefix(): void
     {
-        $blockPrefixes = $this->buttonAddView()->vars['block_prefixes'];
+        $blockPrefixes = self::vars($this->buttonAddView())['block_prefixes'] ?? null;
         assert(is_array($blockPrefixes));
 
         self::assertContains('live_collection_button_add', $blockPrefixes);
@@ -120,7 +120,7 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
     #[Test]
     public function the_add_button_view_emits_the_live_action_attributes_for_addCollectionItem(): void
     {
-        $attr = $this->buttonAddView()->vars['attr'];
+        $attr = self::vars($this->buttonAddView())['attr'] ?? null;
         assert(is_array($attr));
 
         self::assertSame('live#action', $attr['data-action']);
@@ -136,9 +136,9 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
             ->createView();
         self::assertCount(1, $view);
 
-        $buttonDelete = $view[0]->vars['button_delete'];
+        $buttonDelete = self::vars($view[0])['button_delete'] ?? null;
         assert($buttonDelete instanceof FormView);
-        $blockPrefixes = $buttonDelete->vars['block_prefixes'];
+        $blockPrefixes = self::vars($buttonDelete)['block_prefixes'] ?? null;
         assert(is_array($blockPrefixes));
 
         self::assertContains('live_collection_button_delete', $blockPrefixes);
@@ -149,7 +149,7 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
     {
         self::assertSame(
             'setono_sylius_tier_pricing.ui.add_price_tier',
-            $this->buttonAddView()->vars['label'],
+            self::vars($this->buttonAddView())['label'] ?? null,
         );
     }
 
@@ -208,10 +208,25 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
         $view = $this->factory
             ->createNamed('price_tiers', PriceTierCollectionType::class, [])
             ->createView();
-        $buttonAdd = $view->vars['button_add'];
+        $buttonAdd = self::vars($view)['button_add'] ?? null;
         assert($buttonAdd instanceof FormView);
 
         return $buttonAdd;
+    }
+
+    /**
+     * symfony/form's lowest version (6.4.0) declares `FormView::$vars` without a value-type PHPDoc,
+     * so direct `$view->vars['key']` accesses get flagged by PHPStan as offset access on `mixed`
+     * when the `lowest` matrix runs. Narrow the type once here.
+     *
+     * @return array<string, mixed>
+     */
+    private static function vars(FormView $view): array
+    {
+        /** @var array<string, mixed> $vars */
+        $vars = $view->vars;
+
+        return $vars;
     }
 
     /** @return RepositoryInterface<ChannelInterface> */
