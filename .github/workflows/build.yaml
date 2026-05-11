@@ -62,7 +62,7 @@ jobs:
                     dependencies: "${{ matrix.dependencies }}"
                     symfony: "${{ matrix.symfony }}"
 
-    integration-tests:
+    functional-tests:
         runs-on: "ubuntu-latest"
         strategy:
             fail-fast: false
@@ -71,7 +71,7 @@ jobs:
                 dependencies: ["highest"]
                 symfony: ["~6.4.0", "~7.4.0"]
         steps:
-            -   uses: "setono/sylius-plugin/integration-tests@v2"
+            -   uses: "setono/sylius-plugin/functional-tests@v2"
                 with:
                     php-version: "${{ matrix.php-version }}"
                     dependencies: "${{ matrix.dependencies }}"
