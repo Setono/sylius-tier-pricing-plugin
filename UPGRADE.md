@@ -38,10 +38,28 @@ Hook points the plugin attaches to (in case you want to add your own partials al
 
 The collection type now extends `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType` so add/delete fire server-side via Symfony UX Live Components. This works automatically inside the admin product form (which is itself a Live Component). If you embed `PriceTierCollectionType` in a custom form somewhere else, that parent form also needs to be a Live Component for add/delete to work — otherwise the buttons render but their actions don't dispatch.
 
+### `PriceTierType` now takes a `product` option instead of inferring from initial data
+
+In 1.x the `productVariant` field was added by a `PRE_SET_DATA` listener that read `$priceTier->getProduct()`. In 2.x, freshly-added rows in a `LiveCollectionType` are built *before* the parent assigns the backreference, so the listener pattern fails silently on new rows. The variant field is now added unconditionally when an optional `product` form option (typed `ProductInterface|null`) is set, and `ProductTypeExtension` forwards the parent product down via `entry_options.product`. If you instantiate `PriceTierType` directly (rare — the bundled `ProductTypeExtension` covers the admin case), pass `'product' => $product` in the options array.
+
+### Service-id renames
+
+DI service configuration moved from XML to the PHP DSL, and every service id the plugin owns switched from a snake-case alias to its FQCN. The interface gets an alias so consumers fetching by interface keep working. If you injected the plugin's services by snake-case id (in your own YAML, XML, decorators, etc.), update the reference.
+
+| 1.x service id | 2.x service id |
+| --- | --- |
+| `setono_sylius_tier_pricing.provider.price_tier` | `Setono\SyliusTierPricingPlugin\Provider\PriceTierProvider` (plus `Setono\SyliusTierPricingPlugin\Provider\PriceTierProviderInterface` alias) |
+| `setono_sylius_tier_pricing.order_processor.price_tiers` | `Setono\SyliusTierPricingPlugin\OrderProcessor\PriceTiersOrderProcessor` |
+| `setono_sylius_tier_pricing.form.type.price_tier` | `Setono\SyliusTierPricingPlugin\Form\Type\PriceTierType` |
+| `setono_sylius_tier_pricing.form.extension.product` | `Setono\SyliusTierPricingPlugin\Form\Extension\ProductTypeExtension` |
+
+The parameter `setono_sylius_tier_pricing.form.type.price_tier.validation_groups` is unchanged. The Sylius-resource-bundle-managed ids (`setono_sylius_tier_pricing.factory.price_tier`, `setono_sylius_tier_pricing.repository.price_tier`, etc.) are also unchanged — they're auto-generated from the resource config.
+
+The plugin's order processor previously injected `sylius.integer_distributor`; Sylius 2 renamed that to `sylius.distributor.integer`. Already done inside the plugin — only relevant if you copied the constructor signature into your own wiring.
+
 ### Removed
 
 - `Setono\SyliusTierPricingPlugin\EventSubscriber\ProductFormMenuSubscriber` — the menu-builder pattern doesn't exist in v2.
-- `sylius.integer_distributor` service-id reference — internal; only matters if you wired the plugin's order processor manually. Use `sylius.distributor.integer` instead.
 
 ### Public-API signature changes
 
