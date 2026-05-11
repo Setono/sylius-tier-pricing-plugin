@@ -28,10 +28,11 @@ final class PriceTierCollectionType extends AbstractType
                     'label' => 'setono_sylius_tier_pricing.ui.add_price_tier',
                 ],
             ])
-            ->setNormalizer('entry_options', static function (Options $options, mixed $value): array {
+            ->setNormalizer(
+                'entry_options',
                 // Always set label=false; merge with anything the caller passed (e.g. `product` from ProductTypeExtension).
-                return array_merge(['label' => false], is_array($value) ? $value : []);
-            })
+                static fn (Options $options, mixed $value): array => array_merge(['label' => false], is_array($value) ? $value : []),
+            )
         ;
     }
 
