@@ -8,3 +8,4 @@ setono_sylius_tier_pricing:
         add_price_tier: Add price tier
         price_tiers: Price tiers
         price_tier_adjustment_label: Discount when buying %quantity% pieces or more
+        price_tiers_help: 'Offer a percentage discount when a customer adds at least the configured quantity of this product to their cart. Each tier applies as a per-unit discount, and the highest matching tier wins. Leave Channel or Variant empty to apply a tier across all channels or all variants of this product.'
