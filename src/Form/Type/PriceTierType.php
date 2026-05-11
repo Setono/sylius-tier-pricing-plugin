@@ -19,6 +19,7 @@ final class PriceTierType extends AbstractResourceType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // `empty_data` defaults below: LiveCollectionType re-binds on `addCollectionItem` before the user types, and `PriceTier`'s setters are non-nullable.
         $builder->add('quantity', IntegerType::class, [
             'label' => 'setono_sylius_tier_pricing.form.price_tier.quantity',
             'empty_data' => '1',
