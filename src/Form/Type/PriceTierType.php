@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Setono\SyliusTierPricingPlugin\Form\Type;
 
-use Setono\SyliusTierPricingPlugin\Model\PriceTierInterface;
 use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductVariantChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
-use Symfony\Component\Form\Event\PreSetDataEvent;
+use Sylius\Component\Product\Model\ProductInterface;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Webmozart\Assert\Assert;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PriceTierType extends AbstractResourceType
 {
@@ -32,26 +30,24 @@ final class PriceTierType extends AbstractResourceType
             'required' => false,
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event): void {
-            /** @var PriceTierInterface|null $priceTier */
-            $priceTier = $event->getData();
-            Assert::nullOrIsInstanceOf($priceTier, PriceTierInterface::class);
-
-            if (null === $priceTier) {
-                return;
-            }
-
-            $product = $priceTier->getProduct();
-            if (null === $product) {
-                return;
-            }
-
-            $event->getForm()->add('productVariant', ProductVariantChoiceType::class, [
+        $product = $options['product'];
+        if ($product instanceof ProductInterface) {
+            $builder->add('productVariant', ProductVariantChoiceType::class, [
                 'label' => 'sylius.ui.variant',
                 'product' => $product,
                 'required' => false,
             ]);
-        });
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setDefault('product', null)
+            ->setAllowedTypes('product', [ProductInterface::class, 'null'])
+        ;
     }
 
     public function getBlockPrefix(): string

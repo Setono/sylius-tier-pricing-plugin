@@ -76,21 +76,19 @@ final class PriceTierTypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function it_adds_the_product_variant_field_when_the_price_tier_has_a_product(): void
+    public function it_adds_the_product_variant_field_when_a_product_option_is_passed(): void
     {
         // A product with no variants keeps the test independent of Sylius's translatable variant labelling
         // (ProductVariantChoiceType labels by name, which requires a current locale on the variant).
         $product = new ProductTraitFixture();
-        $priceTier = new PriceTier();
-        $priceTier->setProduct($product);
 
-        $form = $this->factory->create(PriceTierType::class, $priceTier);
+        $form = $this->factory->create(PriceTierType::class, null, ['product' => $product]);
 
         self::assertTrue($form->has('productVariant'));
     }
 
     #[Test]
-    public function it_does_not_add_the_product_variant_field_when_no_initial_data_is_given(): void
+    public function it_does_not_add_the_product_variant_field_when_no_product_option_is_passed(): void
     {
         $form = $this->factory->create(PriceTierType::class);
 
@@ -98,11 +96,9 @@ final class PriceTierTypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function it_does_not_add_the_product_variant_field_when_the_price_tier_has_no_product(): void
+    public function it_does_not_add_the_product_variant_field_when_the_product_option_is_null(): void
     {
-        $priceTier = new PriceTier();
-
-        $form = $this->factory->create(PriceTierType::class, $priceTier);
+        $form = $this->factory->create(PriceTierType::class, null, ['product' => null]);
 
         self::assertFalse($form->has('productVariant'));
     }

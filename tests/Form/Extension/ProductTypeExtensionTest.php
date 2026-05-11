@@ -10,6 +10,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusTierPricingPlugin\Form\Extension\ProductTypeExtension;
 use Setono\SyliusTierPricingPlugin\Form\Type\PriceTierCollectionType;
+use Setono\SyliusTierPricingPlugin\Tests\Model\Fixture\ProductTraitFixture;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -29,28 +30,69 @@ final class ProductTypeExtensionTest extends TestCase
     }
 
     #[Test]
-    public function it_adds_the_price_tiers_field_with_a_valid_constraint_and_no_label(): void
+    public function it_adds_the_price_tiers_field_with_no_label_a_valid_constraint_and_the_parent_product_forwarded(): void
     {
+        $product = new ProductTraitFixture();
+
+        $captured = $this->captureAddCall(['data' => $product]);
+
+        self::assertSame('priceTiers', $captured['name']);
+        self::assertSame(PriceTierCollectionType::class, $captured['type']);
+
+        $options = $captured['options'];
+        self::assertFalse($options['label']);
+
+        $constraints = $options['constraints'];
+        self::assertIsArray($constraints);
+        self::assertCount(1, $constraints);
+        self::assertInstanceOf(Valid::class, $constraints[0]);
+
+        $entryOptions = $options['entry_options'];
+        self::assertIsArray($entryOptions);
+        self::assertSame($product, $entryOptions['product']);
+    }
+
+    #[Test]
+    public function it_passes_null_product_when_the_parent_form_has_no_data_yet_eg_on_a_create_page(): void
+    {
+        $captured = $this->captureAddCall([]);
+
+        $entryOptions = $captured['options']['entry_options'];
+        self::assertIsArray($entryOptions);
+        self::assertArrayHasKey('product', $entryOptions);
+        self::assertNull($entryOptions['product']);
+    }
+
+    /**
+     * @param array<string, mixed> $formOptions
+     *
+     * @return array{name: string, type: string, options: array<string, mixed>}
+     */
+    private function captureAddCall(array $formOptions): array
+    {
+        /** @var array{name: string, type: string, options: array<string, mixed>}|null $captured */
+        $captured = null;
         $builder = $this->prophesize(FormBuilderInterface::class);
         $builder
-            ->add(
-                'priceTiers',
-                PriceTierCollectionType::class,
-                Argument::that(static function (array $options): bool {
-                    if (false !== $options['label']) {
-                        return false;
-                    }
-
-                    if (!isset($options['constraints']) || !\is_array($options['constraints'])) {
-                        return false;
-                    }
-
-                    return 1 === count($options['constraints']) && $options['constraints'][0] instanceof Valid;
-                }),
-            )
+            ->add(Argument::cetera())
             ->shouldBeCalledOnce()
-            ->willReturn($builder->reveal());
+            ->will(function (array $args) use (&$captured, $builder): FormBuilderInterface {
+                $name = $args[0];
+                $type = $args[1];
+                /** @var array<string, mixed> $options */
+                $options = $args[2];
+                assert(is_string($name));
+                assert(is_string($type));
 
-        (new ProductTypeExtension())->buildForm($builder->reveal(), []);
+                $captured = ['name' => $name, 'type' => $type, 'options' => $options];
+
+                return $builder->reveal();
+            });
+
+        (new ProductTypeExtension())->buildForm($builder->reveal(), $formOptions);
+
+        self::assertNotNull($captured);
+
+        return $captured;
     }
 }

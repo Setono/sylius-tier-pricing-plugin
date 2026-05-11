@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
@@ -18,7 +19,7 @@ final class PriceTierCollectionType extends AbstractType
         $resolver
             ->setDefaults([
                 'entry_type' => PriceTierType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => [],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
@@ -27,6 +28,10 @@ final class PriceTierCollectionType extends AbstractType
                     'label' => 'setono_sylius_tier_pricing.ui.add_price_tier',
                 ],
             ])
+            ->setNormalizer('entry_options', static function (Options $options, mixed $value): array {
+                // Always set label=false; merge with anything the caller passed (e.g. `product` from ProductTypeExtension).
+                return array_merge(['label' => false], is_array($value) ? $value : []);
+            })
         ;
     }
 

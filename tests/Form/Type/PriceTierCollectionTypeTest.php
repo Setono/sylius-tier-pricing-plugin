@@ -9,6 +9,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusTierPricingPlugin\Form\Type\PriceTierCollectionType;
 use Setono\SyliusTierPricingPlugin\Form\Type\PriceTierType;
 use Setono\SyliusTierPricingPlugin\Model\PriceTier;
+use Setono\SyliusTierPricingPlugin\Tests\Model\Fixture\ProductTraitFixture;
 use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductVariantChoiceType;
 use Sylius\Component\Core\Model\Channel;
@@ -49,6 +50,18 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
 
         self::assertSame(PriceTierType::class, $options['entry_type']);
         self::assertSame(['label' => false], $options['entry_options']);
+    }
+
+    #[Test]
+    public function entry_options_normalizer_keeps_label_false_when_the_caller_passes_extra_options(): void
+    {
+        $product = new ProductTraitFixture();
+        $options = $this->resolveOptions(['entry_options' => ['product' => $product]]);
+
+        $entryOptions = $options['entry_options'];
+        self::assertIsArray($entryOptions);
+        self::assertFalse($entryOptions['label']);
+        self::assertSame($product, $entryOptions['product']);
     }
 
     #[Test]
@@ -175,15 +188,17 @@ final class PriceTierCollectionTypeTest extends TypeTestCase
     }
 
     /**
+     * @param array<string, mixed> $overrides
+     *
      * @return array<string, mixed>
      */
-    private function resolveOptions(): array
+    private function resolveOptions(array $overrides = []): array
     {
         $resolver = new OptionsResolver();
         (new PriceTierCollectionType())->configureOptions($resolver);
 
         /** @var array<string, mixed> $resolved */
-        $resolved = $resolver->resolve();
+        $resolved = $resolver->resolve($overrides);
 
         return $resolved;
     }
