@@ -1,0 +1,11 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Korting
+            discount_help: 'Korting in procenten (bijv. 10 voor 10 %)'
+            quantity: Aantal
+    ui:
+        add_price_tier: Prijsstaffel toevoegen
+        price_tiers: Prijsstaffels
+        price_tier_adjustment_label: 'Korting bij aankoop van %quantity% stuks of meer'
+        price_tiers_help: 'Bied een procentuele korting wanneer een klant ten minste de geconfigureerde hoeveelheid van dit product in zijn winkelwagen legt. Elke staffel wordt toegepast als korting per eenheid en de hoogst passende staffel wint. Laat Kanaal of Variant leeg om een staffel toe te passen op alle kanalen of alle varianten van dit product.'

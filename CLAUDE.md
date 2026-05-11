@@ -57,6 +57,18 @@ Wiring:
 - `Form\Extension\ProductTypeExtension` adds the `priceTiers` field to the Sylius `ProductType` and forwards the parent product down as `entry_options.product` so each per-row `PriceTierType` (including freshly-added rows that aren't yet linked to a product) can render the variant selector for the current product. `Form\Type\PriceTierCollectionType` extends `Symfony\UX\LiveComponent\Form\Type\LiveCollectionType` (mirroring how Sylius admin handles product images) so add/delete fire server-side via Symfony UX Live Components — no client-side prototype-cloning JS. It uses an `entry_options` normalizer to always merge `label => false` with whatever the caller passes (so the product passed down by `ProductTypeExtension` doesn't wipe the label default). To survive LiveCollectionType's empty-bind cycle on `addCollectionItem`, `PriceTier::setQuantity()` and `setDiscount()` are nullable-and-no-op-on-null rather than using form-level `empty_data` defaults — keeps the workaround out of `PriceTierType` and makes the model the single source of truth for its defaults (`quantity = 1`, `discount = '0.0'`).
 - The admin product tab is rendered by Twig hooks (`templates/admin/product/form/{side_navigation,sections}/price_tiers.html.twig`) registered against `sylius_admin.product.{update,create}.content.form.{side_navigation,sections}` — the canonical Sylius 2 hook points (declared by the core in `vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/Resources/config/app/twig_hooks/product/update.yaml`). `ProductFormMenuSubscriber` is gone in v2 — Sylius 2 has no `ProductMenuBuilderEvent`.
 
+## Translations
+
+Source locale is English (`translations/messages.en.yaml`, `translations/validators.en.yaml`). The plugin is shipped translated into:
+
+- Nordic: Danish (`da`), Swedish (`sv`), Norwegian (`no`), Finnish (`fi`)
+- Large EU: German (`de`), French (`fr`), Spanish (`es`), Italian (`it`), Dutch (`nl`), Polish (`pl`)
+- Other common Sylius locales: Portuguese (`pt`), Czech (`cs`), Hungarian (`hu`), Romanian (`ro`), Ukrainian (`uk`)
+
+Translation files live in `translations/` and follow Symfony's `<domain>.<locale>.<format>` naming (`messages.<locale>.yaml`, `validators.<locale>.yaml`).
+
+**Whenever you add a new translation key, you must add it to every locale above — not just `en`.** Missing locale entries are silently rendered as the raw key in admin/shop UI. The same rule applies in reverse: if you remove or rename a key, do it in all locale files in the same change. After editing, run `./tests/Application/bin/console lint:yaml translations` to catch syntax breaks across the set.
+
 ## Conventions
 
 - All `src/` files use `declare(strict_types=1);` and the sylius-labs ECS ruleset — run `composer fix-style` before committing.

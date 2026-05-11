@@ -1,0 +1,11 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Reducere
+            discount_help: 'Reducere în procente (de ex. 10 pentru 10 %)'
+            quantity: Cantitate
+    ui:
+        add_price_tier: Adaugă prag de preț
+        price_tiers: Praguri de preț
+        price_tier_adjustment_label: 'Reducere la achiziția a %quantity% bucăți sau mai multe'
+        price_tiers_help: 'Oferiți o reducere procentuală atunci când un client adaugă în coș cel puțin cantitatea configurată din acest produs. Fiecare prag se aplică drept reducere pe unitate, iar pragul potrivit cel mai mare câștigă. Lăsați Canalul sau Varianta goale pentru a aplica un prag tuturor canalelor sau tuturor variantelor acestui produs.'

@@ -1,0 +1,3 @@
+setono_sylius_tier_pricing:
+    price_tier:
+        unique: 'Un seul palier de prix peut être défini pour une combinaison de { quantité, produit, variante de produit, canal }.'

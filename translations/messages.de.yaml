@@ -1,0 +1,11 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Rabatt
+            discount_help: 'Rabatt in Prozent (z. B. 10 für 10 %)'
+            quantity: Menge
+    ui:
+        add_price_tier: Preisstaffel hinzufügen
+        price_tiers: Preisstaffeln
+        price_tier_adjustment_label: 'Rabatt beim Kauf von %quantity% Stück oder mehr'
+        price_tiers_help: 'Bieten Sie einen prozentualen Rabatt, wenn ein Kunde mindestens die konfigurierte Menge dieses Produkts in den Warenkorb legt. Jede Staffel wird als Rabatt pro Einheit angewendet, und die höchste passende Staffel gewinnt. Lassen Sie Kanal oder Variante leer, um eine Staffel auf alle Kanäle oder alle Varianten dieses Produkts anzuwenden.'

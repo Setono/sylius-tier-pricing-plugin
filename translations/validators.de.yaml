@@ -1,0 +1,3 @@
+setono_sylius_tier_pricing:
+    price_tier:
+        unique: 'Für eine Kombination aus { Menge, Produkt, Produktvariante, Kanal } kann nur eine Preisstaffel festgelegt werden.'

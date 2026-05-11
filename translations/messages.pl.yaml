@@ -1,0 +1,11 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Rabat
+            discount_help: 'Rabat w procentach (np. 10 dla 10 %)'
+            quantity: Ilość
+    ui:
+        add_price_tier: Dodaj próg cenowy
+        price_tiers: Progi cenowe
+        price_tier_adjustment_label: 'Rabat przy zakupie %quantity% sztuk lub więcej'
+        price_tiers_help: 'Zaoferuj rabat procentowy, gdy klient doda do koszyka co najmniej skonfigurowaną ilość tego produktu. Każdy próg jest stosowany jako rabat na jednostkę, a wygrywa najwyższy pasujący próg. Pozostaw Kanał lub Wariant pusty, aby zastosować próg do wszystkich kanałów lub wszystkich wariantów tego produktu.'
