@@ -9,3 +9,6 @@ setono_sylius_tier_pricing:
         price_tiers: Prisnivåer
         price_tier_adjustment_label: 'Rabatt vid köp av %quantity% stycken eller fler'
         price_tiers_help: 'Erbjud en procentuell rabatt när en kund lägger minst det konfigurerade antalet av denna produkt i kundvagnen. Varje nivå appliceras som rabatt per enhet och den högsta matchande nivån vinner. Lämna Kanal eller Variant tomt för att tillämpa en nivå på alla kanaler eller alla varianter av denna produkt.'
+        section:
+            pricing: Prissättning
+            restrictions: Begränsningar

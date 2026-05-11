@@ -6,6 +6,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Setono\SyliusTierPricingPlugin\Form\Extension\ProductTypeExtension;
 use Setono\SyliusTierPricingPlugin\Form\Type\PriceTierType;
+use Setono\SyliusTierPricingPlugin\Form\Type\ProductVariantAutocompleteType;
 
 return static function (ContainerConfigurator $container): void {
     $parameters = $container->parameters();
@@ -22,4 +23,9 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(ProductTypeExtension::class)
         ->tag('form.type_extension');
+
+    $services->set(ProductVariantAutocompleteType::class)
+        ->args([param('sylius.model.product_variant.class')])
+        ->tag('form.type')
+        ->tag('ux.entity_autocomplete_field');
 };

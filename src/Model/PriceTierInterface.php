@@ -19,14 +19,14 @@ interface PriceTierInterface extends ResourceInterface, ChannelAwareInterface
     public function getQuantity(): int;
 
     /**
-     * Passing null is a no-op (leaves the existing quantity untouched). This lets the type be used inside a `LiveCollectionType`, which re-binds the parent form with empty data on `addCollectionItem` before the user has typed anything.
+     * Passing null resets the quantity to {@see PriceTier::DEFAULT_QUANTITY}. This lets the type be used inside a `LiveCollectionType`, which re-binds the parent form with empty data on `addCollectionItem` before the user has typed anything — the reset is preferable to a no-op because it gives the model deterministic state regardless of what the previous value was.
      */
     public function setQuantity(?int $quantity): void;
 
     public function getDiscount(): string;
 
     /**
-     * Passing null is a no-op (leaves the existing discount untouched). Same reason as `setQuantity()`.
+     * Passing null resets the discount to {@see PriceTier::DEFAULT_DISCOUNT}. Same reason as `setQuantity()`.
      */
     public function setDiscount(float|string|null $discount): void;
 

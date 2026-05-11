@@ -75,41 +75,23 @@ final class PriceTierTest extends TestCase
     }
 
     #[Test]
-    public function setting_quantity_to_null_leaves_the_existing_value_untouched(): void
+    public function setting_quantity_to_null_resets_it_to_the_default(): void
     {
         $priceTier = new PriceTier();
         $priceTier->setQuantity(5);
         $priceTier->setQuantity(null);
 
-        self::assertSame(5, $priceTier->getQuantity());
+        self::assertSame(PriceTier::DEFAULT_QUANTITY, $priceTier->getQuantity());
     }
 
     #[Test]
-    public function setting_quantity_to_null_on_a_fresh_instance_keeps_the_default(): void
-    {
-        $priceTier = new PriceTier();
-        $priceTier->setQuantity(null);
-
-        self::assertSame(1, $priceTier->getQuantity());
-    }
-
-    #[Test]
-    public function setting_discount_to_null_leaves_the_existing_value_untouched(): void
+    public function setting_discount_to_null_resets_it_to_the_default(): void
     {
         $priceTier = new PriceTier();
         $priceTier->setDiscount('12.5');
         $priceTier->setDiscount(null);
 
-        self::assertSame('12.5', $priceTier->getDiscount());
-    }
-
-    #[Test]
-    public function setting_discount_to_null_on_a_fresh_instance_keeps_the_default(): void
-    {
-        $priceTier = new PriceTier();
-        $priceTier->setDiscount(null);
-
-        self::assertSame('0.0', $priceTier->getDiscount());
+        self::assertSame(PriceTier::DEFAULT_DISCOUNT, $priceTier->getDiscount());
     }
 
     #[Test]

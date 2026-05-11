@@ -9,3 +9,6 @@ setono_sylius_tier_pricing:
         price_tiers: Cenové hladiny
         price_tier_adjustment_label: 'Sleva při nákupu %quantity% kusů a více'
         price_tiers_help: 'Nabídněte procentuální slevu, když zákazník přidá do košíku alespoň nakonfigurované množství tohoto produktu. Každá hladina se uplatní jako sleva za jednotku a vítězí nejvyšší odpovídající hladina. Ponechejte Kanál nebo Variantu prázdné, abyste hladinu použili na všechny kanály nebo všechny varianty tohoto produktu.'
+        section:
+            pricing: Ceny
+            restrictions: Omezení

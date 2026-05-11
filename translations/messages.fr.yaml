@@ -9,3 +9,6 @@ setono_sylius_tier_pricing:
         price_tiers: Paliers de prix
         price_tier_adjustment_label: "Remise lors de l'achat de %quantity% pièces ou plus"
         price_tiers_help: "Offrez une remise en pourcentage lorsqu'un client ajoute au moins la quantité configurée de ce produit à son panier. Chaque palier s'applique en tant que remise par unité, et le palier correspondant le plus élevé l'emporte. Laissez Canal ou Variante vide pour appliquer un palier à tous les canaux ou à toutes les variantes de ce produit."
+        section:
+            pricing: Tarification
+            restrictions: Restrictions

@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Tests\Form\Type;
 
 use PHPUnit\Framework\Attributes\Test;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusTierPricingPlugin\Form\Type\PriceTierType;
+use Setono\SyliusTierPricingPlugin\Form\Type\ProductVariantAutocompleteType;
 use Setono\SyliusTierPricingPlugin\Model\PriceTier;
 use Setono\SyliusTierPricingPlugin\Tests\Model\Fixture\ProductTraitFixture;
 use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
-use Sylius\Bundle\ProductBundle\Form\Type\ProductVariantChoiceType;
 use Sylius\Component\Core\Model\Channel;
 use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Product\Model\Product as BaseProduct;
 use Sylius\Resource\Doctrine\Persistence\RepositoryInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 final class PriceTierTypeTest extends TypeTestCase
@@ -56,8 +59,11 @@ final class PriceTierTypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function empty_quantity_and_discount_are_no_ops_so_live_collection_re_bind_does_not_throw(): void
+    public function empty_quantity_and_discount_reset_to_defaults_so_live_collection_re_bind_does_not_throw(): void
     {
+        // LiveCollectionType re-submits the parent form with empty entry data on `addCollectionItem`.
+        // The setters absorb the resulting null by resetting to the model defaults — no type error, and
+        // the entity ends up in a deterministic state regardless of any prior value.
         $form = $this->factory->create(PriceTierType::class);
 
         $form->submit([
@@ -70,37 +76,65 @@ final class PriceTierTypeTest extends TypeTestCase
 
         /** @var PriceTier $priceTier */
         $priceTier = $form->getData();
-        self::assertSame(1, $priceTier->getQuantity());
-        self::assertSame('0.0', $priceTier->getDiscount());
+        self::assertSame(PriceTier::DEFAULT_QUANTITY, $priceTier->getQuantity());
+        self::assertSame(PriceTier::DEFAULT_DISCOUNT, $priceTier->getDiscount());
         self::assertNull($priceTier->getChannel());
     }
 
     #[Test]
-    public function it_adds_the_product_variant_field_when_a_product_option_is_passed(): void
+    public function it_adds_the_product_variant_autocomplete_when_product_has_id(): void
     {
-        // A product with no variants keeps the test independent of Sylius's translatable variant labelling
-        // (ProductVariantChoiceType labels by name, which requires a current locale on the variant).
+        $product = $this->productWithId(42);
+
+        // Drive buildForm() directly with a prophesized builder so we don't have to instantiate the full
+        // autocomplete type chain (TranslatableAutocompleteType → BaseEntityAutocompleteType → EntityType)
+        // — which would pull in LocaleContext, the URL generator, and ManagerRegistry just to test wiring.
+        $builder = $this->prophesize(FormBuilderInterface::class);
+        $builder->add(Argument::any(), Argument::any(), Argument::any())->willReturn($builder);
+        $builder
+            ->add('productVariant', ProductVariantAutocompleteType::class, Argument::that(
+                static function (array $options): bool {
+                    $extraOptions = $options['extra_options'] ?? [];
+                    self::assertIsArray($extraOptions);
+
+                    return 42 === ($extraOptions['product_id'] ?? null) &&
+                        false === $options['required'] &&
+                        'sylius.ui.variant' === $options['label'];
+                },
+            ))
+            ->shouldBeCalled()
+            ->willReturn($builder)
+        ;
+
+        $type = new PriceTierType(PriceTier::class, ['setono_sylius_tier_pricing']);
+        $type->buildForm($builder->reveal(), ['product' => $product]);
+    }
+
+    #[Test]
+    public function it_omits_the_product_variant_field_when_product_has_no_id(): void
+    {
+        // A brand-new product (admin create flow) has no variants yet, so scoping the autocomplete to
+        // its id is meaningless — skip the field entirely rather than fall back to an unscoped lookup.
         $product = new ProductTraitFixture();
+        self::assertNull($product->getId());
 
-        $form = $this->factory->create(PriceTierType::class, null, ['product' => $product]);
+        $builder = $this->prophesize(FormBuilderInterface::class);
+        $builder->add(Argument::any(), Argument::any(), Argument::any())->willReturn($builder);
+        $builder->add('productVariant', Argument::cetera())->shouldNotBeCalled();
 
-        self::assertTrue($form->has('productVariant'));
+        $type = new PriceTierType(PriceTier::class, ['setono_sylius_tier_pricing']);
+        $type->buildForm($builder->reveal(), ['product' => $product]);
     }
 
     #[Test]
-    public function it_does_not_add_the_product_variant_field_when_no_product_option_is_passed(): void
+    public function it_omits_the_product_variant_field_when_product_option_is_null(): void
     {
-        $form = $this->factory->create(PriceTierType::class);
+        $builder = $this->prophesize(FormBuilderInterface::class);
+        $builder->add(Argument::any(), Argument::any(), Argument::any())->willReturn($builder);
+        $builder->add('productVariant', Argument::cetera())->shouldNotBeCalled();
 
-        self::assertFalse($form->has('productVariant'));
-    }
-
-    #[Test]
-    public function it_does_not_add_the_product_variant_field_when_the_product_option_is_null(): void
-    {
-        $form = $this->factory->create(PriceTierType::class, null, ['product' => null]);
-
-        self::assertFalse($form->has('productVariant'));
+        $type = new PriceTierType(PriceTier::class, ['setono_sylius_tier_pricing']);
+        $type->buildForm($builder->reveal(), ['product' => null]);
     }
 
     #[Test]
@@ -133,7 +167,6 @@ final class PriceTierTypeTest extends TypeTestCase
         return [
             new PriceTierType(PriceTier::class, ['setono_sylius_tier_pricing']),
             new ChannelChoiceType($this->channelRepository()),
-            new ProductVariantChoiceType(),
         ];
     }
 
@@ -153,5 +186,13 @@ final class PriceTierTypeTest extends TypeTestCase
         $channel->setName($code);
 
         return $channel;
+    }
+
+    private function productWithId(int $id): ProductTraitFixture
+    {
+        $product = new ProductTraitFixture();
+        (new \ReflectionProperty(BaseProduct::class, 'id'))->setValue($product, $id);
+
+        return $product;
     }
 }

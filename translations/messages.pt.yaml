@@ -9,3 +9,6 @@ setono_sylius_tier_pricing:
         price_tiers: Escalões de preço
         price_tier_adjustment_label: 'Desconto na compra de %quantity% unidades ou mais'
         price_tiers_help: 'Ofereça um desconto percentual quando um cliente adicionar pelo menos a quantidade configurada deste produto ao carrinho. Cada escalão aplica-se como desconto por unidade e prevalece o escalão correspondente mais alto. Deixe Canal ou Variante em branco para aplicar um escalão a todos os canais ou a todas as variantes deste produto.'
+        section:
+            pricing: Preçário
+            restrictions: Restrições

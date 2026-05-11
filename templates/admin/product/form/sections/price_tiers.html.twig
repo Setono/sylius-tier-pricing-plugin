@@ -13,26 +13,30 @@
 
             <div class="row" {{ sylius_test_html_attribute('price-tier-subforms') }}>
                 {% for price_tier_form in price_tiers %}
-                    <div class="col-12 row mb-4 align-items-end" {{ sylius_test_html_attribute('price-tier-subform') }}>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    {{ form_row(price_tier_form.quantity) }}
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    {{ form_row(price_tier_form.discount) }}
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    {{ form_row(price_tier_form.channel) }}
-                                </div>
-                                {% if price_tier_form.productVariant is defined %}
-                                    <div class="col-md-12 mb-3">
-                                        {{ form_row(price_tier_form.productVariant) }}
-                                    </div>
-                                {% endif %}
+                    <div class="col-12 mb-4 pb-3 border-bottom" {{ sylius_test_html_attribute('price-tier-subform') }}>
+                        <h3 class="h6 text-uppercase text-muted mb-2">{{ 'setono_sylius_tier_pricing.ui.section.pricing'|trans }}</h3>
+                        <div class="row mb-2">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(price_tier_form.quantity) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(price_tier_form.discount) }}
                             </div>
                         </div>
-                        <div class="col-auto mb-3">
+
+                        <h3 class="h6 text-uppercase text-muted mb-2">{{ 'setono_sylius_tier_pricing.ui.section.restrictions'|trans }}</h3>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(price_tier_form.channel) }}
+                            </div>
+                            {% if price_tier_form.productVariant is defined %}
+                                <div class="col-md-6 mb-3">
+                                    {{ form_row(price_tier_form.productVariant) }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div>
                             {{ form_widget(price_tier_form.vars.button_delete, { label: 'sylius.ui.delete'|trans, attr: { class: 'btn btn-outline-danger', 'data-test-price-tier-delete': '' }}) }}
                         </div>
                     </div>

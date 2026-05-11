@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Form\Type;
 
 use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
-use Sylius\Bundle\ProductBundle\Form\Type\ProductVariantChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Component\Product\Model\ProductInterface;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -31,11 +30,13 @@ final class PriceTierType extends AbstractResourceType
         ]);
 
         $product = $options['product'];
-        if ($product instanceof ProductInterface) {
-            $builder->add('productVariant', ProductVariantChoiceType::class, [
+        if ($product instanceof ProductInterface && null !== $product->getId()) {
+            // Scope the autocomplete to *this* product's variants via extra_options.product_id —
+            // ProductVariantAutocompleteType's filter_query reads it back at autocomplete-request time.
+            $builder->add('productVariant', ProductVariantAutocompleteType::class, [
                 'label' => 'sylius.ui.variant',
-                'product' => $product,
                 'required' => false,
+                'extra_options' => ['product_id' => $product->getId()],
             ]);
         }
     }

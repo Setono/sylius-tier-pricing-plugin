@@ -9,3 +9,6 @@ setono_sylius_tier_pricing:
         price_tiers: Fasce di prezzo
         price_tier_adjustment_label: "Sconto all'acquisto di %quantity% pezzi o più"
         price_tiers_help: 'Offri uno sconto percentuale quando un cliente aggiunge al carrello almeno la quantità configurata di questo prodotto. Ogni fascia viene applicata come sconto per unità e vince la fascia corrispondente più alta. Lascia Canale o Variante vuoto per applicare una fascia a tutti i canali o a tutte le varianti di questo prodotto.'
+        section:
+            pricing: Prezzi
+            restrictions: Restrizioni

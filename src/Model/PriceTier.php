@@ -10,11 +10,15 @@ use Sylius\Component\Product\Model\ProductVariantInterface;
 
 class PriceTier implements PriceTierInterface
 {
+    public const DEFAULT_QUANTITY = 1;
+
+    public const DEFAULT_DISCOUNT = '0.0';
+
     protected ?int $id = null;
 
-    protected int $quantity = 1;
+    protected int $quantity = self::DEFAULT_QUANTITY;
 
-    protected string $discount = '0.0';
+    protected string $discount = self::DEFAULT_DISCOUNT;
 
     protected ?ProductInterface $product = null;
 
@@ -34,11 +38,7 @@ class PriceTier implements PriceTierInterface
 
     public function setQuantity(?int $quantity): void
     {
-        if (null === $quantity) {
-            return;
-        }
-
-        $this->quantity = $quantity;
+        $this->quantity = $quantity ?? self::DEFAULT_QUANTITY;
     }
 
     public function getDiscount(): string
@@ -48,11 +48,7 @@ class PriceTier implements PriceTierInterface
 
     public function setDiscount(float|string|null $discount): void
     {
-        if (null === $discount) {
-            return;
-        }
-
-        $this->discount = (string) $discount;
+        $this->discount = null === $discount ? self::DEFAULT_DISCOUNT : (string) $discount;
     }
 
     public function getProduct(): ?ProductInterface
