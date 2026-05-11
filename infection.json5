@@ -8,7 +8,10 @@
         "text": "php://stderr",
         "github": true,
         "stryker": {
-            "badge": "master"
+            // Regex (delimited by `/`) so every `<n>.x` maintenance branch — currently 1.x and 2.x —
+            // updates the Stryker dashboard badge. A literal string here is matched exactly, so
+            // pinning to a single branch name silently drops the report for every other one.
+            "badge": "/^\\d+\\.x$/"
         }
     },
     "minMsi": 51.02,
