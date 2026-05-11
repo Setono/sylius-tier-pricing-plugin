@@ -1,0 +1,3 @@
+setono_sylius_tier_pricing:
+    price_tier:
+        unique: 'Endast en prisnivå kan anges för en kombination av { antal, produkt, produktvariant, kanal }.'

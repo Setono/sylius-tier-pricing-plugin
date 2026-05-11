@@ -1,0 +1,14 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Descuento
+            discount_help: 'Descuento en porcentaje (p. ej. 10 para un 10 %)'
+            quantity: Cantidad
+    ui:
+        add_price_tier: Añadir nivel de precio
+        price_tiers: Niveles de precio
+        price_tier_adjustment_label: 'Descuento al comprar %quantity% unidades o más'
+        price_tiers_help: 'Ofrezca un descuento porcentual cuando un cliente añada al carrito al menos la cantidad configurada de este producto. Cada nivel se aplica como descuento por unidad y gana el nivel coincidente más alto. Deje Canal o Variante en blanco para aplicar un nivel a todos los canales o a todas las variantes de este producto.'
+        section:
+            pricing: Precios
+            restrictions: Restricciones

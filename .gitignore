@@ -1,4 +1,6 @@
 /.build/
+/.claude/
+/.mcp.json
 /vendor/
 /node_modules/
 /composer.lock
@@ -6,7 +8,11 @@
 /tests/Application/yarn.lock
 
 /.phpunit.result.cache
+/.phpunit.cache/
+/tests/Application/config/reference.php
 
 # Symfony CLI https://symfony.com/doc/current/setup/symfony_server.html#different-php-settings-per-project
 /.php-version
 /php.ini
+/.playwright-mcp/
+/price-tiers-*.png

@@ -1,0 +1,14 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Alennus
+            discount_help: 'Alennus prosentteina (esim. 10 tarkoittaa 10 %)'
+            quantity: Määrä
+    ui:
+        add_price_tier: Lisää hintaporras
+        price_tiers: Hintaportaat
+        price_tier_adjustment_label: 'Alennus, kun ostetaan %quantity% kappaletta tai enemmän'
+        price_tiers_help: 'Tarjoa prosentuaalinen alennus, kun asiakas lisää ostoskoriin vähintään määritetyn määrän tätä tuotetta. Jokainen porras toimii yksikkökohtaisena alennuksena, ja korkein vastaava porras voittaa. Jätä Kanava tai Variantti tyhjäksi soveltaaksesi porrasta kaikkiin kanaviin tai tämän tuotteen kaikkiin variantteihin.'
+        section:
+            pricing: Hinnoittelu
+            restrictions: Rajaukset

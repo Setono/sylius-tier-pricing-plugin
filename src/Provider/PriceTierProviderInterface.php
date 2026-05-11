@@ -16,7 +16,7 @@ interface PriceTierProviderInterface
     public function getPriceTier(
         int $quantity,
         ProductVariantInterface $productVariant,
-        ChannelInterface $channel = null,
+        ?ChannelInterface $channel = null,
     ): ?PriceTierInterface;
 
     /**
@@ -26,6 +26,6 @@ interface PriceTierProviderInterface
      */
     public function getPriceTiers(
         ProductVariantInterface $productVariant,
-        ChannelInterface $channel = null,
+        ?ChannelInterface $channel = null,
     ): array;
 }

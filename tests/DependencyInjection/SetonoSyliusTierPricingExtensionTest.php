@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Setono\SyliusTierPricingPlugin\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Setono\SyliusTierPricingPlugin\DependencyInjection\SetonoSyliusTierPricingExtension;
 
-/**
- * See examples of tests and configuration options here: https://github.com/SymfonyTest/SymfonyDependencyInjectionTest
- */
 final class SetonoSyliusTierPricingExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions(): array
@@ -19,9 +17,7 @@ final class SetonoSyliusTierPricingExtensionTest extends AbstractExtensionTestCa
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function after_loading_the_correct_parameter_has_been_set(): void
     {
         $this->load();

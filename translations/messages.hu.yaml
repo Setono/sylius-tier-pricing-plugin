@@ -1,0 +1,14 @@
+setono_sylius_tier_pricing:
+    form:
+        price_tier:
+            discount: Kedvezmény
+            discount_help: 'Kedvezmény százalékban (pl. 10 a 10 %-hoz)'
+            quantity: Mennyiség
+    ui:
+        add_price_tier: Árszint hozzáadása
+        price_tiers: Árszintek
+        price_tier_adjustment_label: 'Kedvezmény legalább %quantity% darab vásárlása esetén'
+        price_tiers_help: 'Kínáljon százalékos kedvezményt, ha a vásárló legalább a beállított mennyiséget hozzáadja a kosarához ebből a termékből. Minden szint egységenkénti kedvezményként érvényesül, és a legmagasabb illeszkedő szint nyer. Hagyja üresen a Csatornát vagy a Variánst, hogy a szintet az összes csatornára vagy a termék összes variánsára alkalmazza.'
+        section:
+            pricing: Árazás
+            restrictions: Korlátozások

@@ -15,13 +15,16 @@ use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class PriceTiersOrderProcessor implements OrderProcessorInterface
+final readonly class PriceTiersOrderProcessor implements OrderProcessorInterface
 {
+    /**
+     * @param AdjustmentFactoryInterface<\Sylius\Component\Order\Model\AdjustmentInterface> $adjustmentFactory
+     */
     public function __construct(
-        private readonly PriceTierProviderInterface $priceTierProvider,
-        private readonly AdjustmentFactoryInterface $adjustmentFactory,
-        private readonly IntegerDistributorInterface $distributor,
-        private readonly TranslatorInterface $translator,
+        private PriceTierProviderInterface $priceTierProvider,
+        private AdjustmentFactoryInterface $adjustmentFactory,
+        private IntegerDistributorInterface $distributor,
+        private TranslatorInterface $translator,
     ) {
     }
 

@@ -1,0 +1,3 @@
+setono_sylius_tier_pricing:
+    price_tier:
+        unique: 'Apenas um escalão de preço pode ser definido para uma combinação de { quantidade, produto, variante de produto, canal }.'
